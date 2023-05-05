@@ -40,21 +40,31 @@ setupIonicReact();
 
 const App: React.FC = () => {
   useEffect(() => {
-    LocalNotifications.schedule({
-      notifications: [
-        {
-          title: 'Hey there',
-          body: 'Just testing',
-          id: 1,
-          schedule: {
-            allowWhileIdle: true,
-            on: {
-              minute: 10,
+    (async () => {
+      const permResult = await LocalNotifications.requestPermissions();
+      if (permResult.display === 'granted') {
+        alert('Notification permission granted');
+      } else {
+        alert('Notification permission denied');
+        return;
+      }
+
+      LocalNotifications.schedule({
+        notifications: [
+          {
+            title: 'Hey there',
+            body: 'Just testing',
+            id: 1,
+            schedule: {
+              allowWhileIdle: true,
+              on: {
+                minute: 10,
+              },
             },
           },
-        },
-      ],
-    });
+        ],
+      });
+    })();
   }, []);
 
   return (
